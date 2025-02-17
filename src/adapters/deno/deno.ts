@@ -1,13 +1,20 @@
 /// <reference types="deno/ns" />
-import { DenoPlatformInfo } from '@hattip/adapter-deno'
-import { RequestHandler } from '@hattip/compose'
-import crossws, { DenoAdapter, DenoOptions } from 'crossws/adapters/deno'
+import type { DenoPlatformInfo } from '@hattip/adapter-deno'
+import type { RequestHandler } from '@hattip/compose'
+import crossws, { DenoOptions } from 'crossws/adapters/deno'
+import { forwardHattipContext } from '../../common.js'
+import type {
+  WebSocketAdapter as Adapter,
+  WebSocketAdapterOptions as AdapterOptions,
+} from '../../index.js'
 
 export * from '../../core.js'
 
-export interface WebSocketAdapterOptions extends DenoOptions {}
+export interface WebSocketAdapterOptions
+  extends Omit<DenoOptions, keyof AdapterOptions>,
+    AdapterOptions {}
 
-export interface WebSocketAdapter extends Omit<DenoAdapter, 'handleUpgrade'> {
+export interface WebSocketAdapter extends Adapter {
   handler: RequestHandler<DenoPlatformInfo<Deno.ServeHandlerInfo>>
 }
 
@@ -30,12 +37,14 @@ export interface WebSocketAdapter extends Omit<DenoAdapter, 'handleUpgrade'> {
 export function createWebSocketAdapter(
   options?: WebSocketAdapterOptions
 ): WebSocketAdapter {
-  const { handleUpgrade, ...context } = crossws(options)
+  const { handleUpgrade, ...adapter } = crossws(options as any)
 
   return {
-    ...context,
-    handler: ({ request, platform, next }) => {
+    ...(adapter as WebSocketAdapter),
+    handler: context => {
+      const { request, platform, next } = context
       if (request.headers.get('upgrade') === 'websocket') {
+        forwardHattipContext(request, context)
         return handleUpgrade(request, platform.info as any)
       }
       return next()

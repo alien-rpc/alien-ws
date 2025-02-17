@@ -36,6 +36,7 @@
     "@hattip/adapter-bun": "*",
     "@hattip/adapter-cloudflare-workers": "*",
     "@hattip/adapter-deno": "*",
+    "@hattip/adapter-node": "*",
     "@hattip/adapter-uwebsockets": "*",
     "@hattip/compose": "*",
     "@types/node": "*"
@@ -53,7 +54,13 @@
     "@hattip/adapter-deno": {
       "optional": true
     },
+    "@hattip/adapter-node": {
+      "optional": true
+    },
     "@hattip/adapter-uwebsockets": {
+      "optional": true
+    },
+    "@hattip/compose": {
       "optional": true
     },
     "@types/node": {

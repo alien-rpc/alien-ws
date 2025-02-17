@@ -1,18 +1,17 @@
 import { UWebSocketAdapterOptions } from '@hattip/adapter-uwebsockets'
-import crossws, { UWSAdapter, UWSOptions } from 'crossws/adapters/uws'
+import crossws, { UWSOptions } from 'crossws/adapters/uws'
+import type {
+  WebSocketAdapter as Adapter,
+  WebSocketAdapterOptions as AdapterOptions,
+} from '../../index.js'
 
 export * from '../../core.js'
 
-export interface WebSocketAdapterOptions extends UWSOptions {
-  /**
-   * The path to the WebSocket endpoint.
-   *
-   * @default "/*"
-   */
-  path?: string
-}
+export interface WebSocketAdapterOptions
+  extends Omit<UWSOptions, keyof AdapterOptions>,
+    AdapterOptions {}
 
-export interface WebSocketAdapter extends Omit<UWSAdapter, 'websocket'> {
+export interface WebSocketAdapter extends Adapter {
   configureServer: UWebSocketAdapterOptions['configureServer']
 }
 
@@ -37,12 +36,12 @@ export interface WebSocketAdapter extends Omit<UWSAdapter, 'websocket'> {
 export function createWebSocketAdapter(
   options?: WebSocketAdapterOptions
 ): WebSocketAdapter {
-  const ws = crossws(options)
+  const { websocket, ...adapter } = crossws(options as any)
 
   return {
-    ...ws,
+    ...(adapter as WebSocketAdapter),
     configureServer(app) {
-      app.ws(options?.path ?? '/*', ws.websocket)
+      app.ws('/*', websocket)
     },
   }
 }

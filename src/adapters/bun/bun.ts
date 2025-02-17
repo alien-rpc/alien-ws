@@ -1,13 +1,21 @@
-import { BunPlatformInfo } from '@hattip/adapter-bun'
-import { RequestHandler } from '@hattip/compose'
+import type { BunPlatformInfo } from '@hattip/adapter-bun'
+import type { RequestHandler } from '@hattip/compose'
 import crossws, { BunAdapter, BunOptions } from 'crossws/adapters/bun'
+import { forwardHattipContext } from '../../common.js'
+import type {
+  WebSocketAdapter as Adapter,
+  WebSocketAdapterOptions as AdapterOptions,
+} from '../../index.js'
 
 export * from '../../core.js'
 
-export interface WebSocketAdapterOptions extends BunOptions {}
+export interface WebSocketAdapterOptions
+  extends Omit<BunOptions, keyof AdapterOptions>,
+    AdapterOptions {}
 
-export interface WebSocketAdapter extends Omit<BunAdapter, 'handleUpgrade'> {
+export interface WebSocketAdapter extends Adapter {
   handler: RequestHandler<BunPlatformInfo>
+  websocket: BunAdapter['websocket']
 }
 
 /**
@@ -32,12 +40,14 @@ export interface WebSocketAdapter extends Omit<BunAdapter, 'handleUpgrade'> {
 export function createWebSocketAdapter(
   options?: WebSocketAdapterOptions
 ): WebSocketAdapter {
-  const { handleUpgrade, ...context } = crossws(options)
+  const { handleUpgrade, ...adapter } = crossws(options as any)
 
   return {
-    ...context,
-    handler: ({ request, platform, next }) => {
+    ...(adapter as WebSocketAdapter),
+    handler: context => {
+      const { request, platform, next } = context
       if (request.headers.get('upgrade') === 'websocket') {
+        forwardHattipContext(request, context)
         return handleUpgrade(request, platform.server)
       }
       return next()

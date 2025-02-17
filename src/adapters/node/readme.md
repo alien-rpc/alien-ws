@@ -3,12 +3,13 @@
 1. Install the dependencies:
 
 ```sh
-pnpm add hattip-ws @hattip/adapter-node
+pnpm add hattip-ws @hattip/adapter-node @hattip/compose
 ```
 
-2. Create the adapter and use its `configureServer` method:
+2. Create the adapter and use its handler and `configureServer` method:
 
 ```ts
+import { compose } from '@hattip/compose'
 import { createServer } from '@hattip/adapter-node'
 import { createWebSocketAdapter } from 'hattip-ws/node'
 import httpHandler from './http-handler.ts'
@@ -18,7 +19,7 @@ const ws = createWebSocketAdapter({
   hooks: { … },
 })
 
-const server = createServer(httpHandler)
+const server = createServer(compose(httpHandler, ws.handler))
 ws.configureServer(server)
 
 export default server

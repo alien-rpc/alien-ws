@@ -1,11 +1,17 @@
-import { AdapterInstance, AdapterOptions } from 'crossws'
+import { Hooks, Peer, ResolveHooks } from './core.js'
 
 export * from './core.js'
 
-export interface WebSocketAdapterOptions extends AdapterOptions {}
+export interface WebSocketAdapterOptions<P = unknown> {
+  resolve?: ResolveHooks<P>
+  hooks?: Partial<Hooks<P>>
+}
 
-export interface WebSocketAdapter extends AdapterInstance {}
+export interface WebSocketAdapter<P = unknown> {
+  readonly peers: Set<Peer<P>>
+  readonly publish: Peer<P>['publish']
+}
 
-export type WebSocketAdapterFactory = (
-  options?: WebSocketAdapterOptions
-) => WebSocketAdapter
+export type WebSocketAdapterFactory<P = unknown> = (
+  options?: WebSocketAdapterOptions<P>
+) => WebSocketAdapter<P>

@@ -1,17 +1,21 @@
 /// <reference types="@cloudflare/workers-types" />
-import { CloudflareWorkersPlatformInfo } from '@hattip/adapter-cloudflare-workers'
-import { RequestHandler } from '@hattip/compose'
-import crossws, {
-  CloudflareAdapter,
-  CloudflareOptions,
-} from 'crossws/adapters/cloudflare'
+import type { CloudflareWorkersPlatformInfo } from '@hattip/adapter-cloudflare-workers'
+import type { RequestHandler } from '@hattip/compose'
+import crossws, { CloudflareOptions } from 'crossws/adapters/cloudflare'
+import type {
+  WebSocketAdapter as Adapter,
+  WebSocketAdapterOptions as AdapterOptions,
+} from '../../index.js'
+
+import { forwardHattipContext } from '../../common.js'
 
 export * from '../../core.js'
 
-export interface WebSocketAdapterOptions extends CloudflareOptions {}
+export interface WebSocketAdapterOptions
+  extends Omit<CloudflareOptions, keyof AdapterOptions>,
+    AdapterOptions {}
 
-export interface WebSocketAdapter
-  extends Omit<CloudflareAdapter, 'handleUpgrade'> {
+export interface WebSocketAdapter extends Adapter {
   handler: RequestHandler<CloudflareWorkersPlatformInfo>
 }
 
@@ -37,12 +41,14 @@ export interface WebSocketAdapter
 export function createWebSocketAdapter(
   options?: WebSocketAdapterOptions
 ): WebSocketAdapter {
-  const { handleUpgrade, ...context } = crossws(options)
+  const { handleUpgrade, ...adapter } = crossws(options as any)
 
   return {
-    ...context,
-    handler: ({ request, platform, next }) => {
+    ...(adapter as WebSocketAdapter),
+    handler: context => {
+      const { request, platform, next } = context
       if (request.headers.get('upgrade') === 'websocket') {
+        forwardHattipContext(request, context)
         return handleUpgrade(request, platform.env, platform.context) as any
       }
       return next()
