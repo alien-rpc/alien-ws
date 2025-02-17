@@ -4,13 +4,7 @@ A lightweight wrapper that helps you integrate `crossws` with [Hattip](https://g
 
 ## Usage
 
-1. Install the package:
-
-```sh
-pnpm add hattip-ws
-```
-
-2. Pick the right adapter for your server:
+Follow the instructions for your server:
 
 - [Node.js](https://github.com/alloc/hattip-ws/tree/main/src/adapters/node)
 - [Deno](https://github.com/alloc/hattip-ws/tree/main/src/adapters/deno)
