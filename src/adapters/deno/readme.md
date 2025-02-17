@@ -1,7 +1,7 @@
 # hattip-ws/deno
 
 ```sh
-pnpm add hattip-ws @hattip/adapter-deno @hattip/compose
+deno install npm:hattip-ws npm:@hattip/adapter-deno npm:@hattip/compose
 ```
 
 ```ts

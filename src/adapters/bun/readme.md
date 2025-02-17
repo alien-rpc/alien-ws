@@ -1,7 +1,7 @@
 # hattip-ws/bun
 
 ```sh
-pnpm add hattip-ws @hattip/adapter-bun @hattip/compose
+bun add hattip-ws @hattip/adapter-bun @hattip/compose
 ```
 
 ```ts
