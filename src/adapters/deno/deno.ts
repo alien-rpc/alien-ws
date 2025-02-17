@@ -3,6 +3,8 @@ import { DenoPlatformInfo } from '@hattip/adapter-deno'
 import { RequestHandler } from '@hattip/compose'
 import crossws, { DenoAdapter, DenoOptions } from 'crossws/adapters/deno'
 
+export * from '../../core.js'
+
 export interface WebSocketAdapterOptions extends DenoOptions {}
 
 export interface WebSocketAdapter extends Omit<DenoAdapter, 'handleUpgrade'> {

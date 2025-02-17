@@ -6,6 +6,8 @@ import crossws, {
   CloudflareOptions,
 } from 'crossws/adapters/cloudflare'
 
+export * from '../../core.js'
+
 export interface WebSocketAdapterOptions extends CloudflareOptions {}
 
 export interface WebSocketAdapter

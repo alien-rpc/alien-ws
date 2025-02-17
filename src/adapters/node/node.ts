@@ -2,6 +2,8 @@
 import crossws, { NodeAdapter, NodeOptions } from 'crossws/adapters/node'
 import * as http from 'node:http'
 
+export * from '../../core.js'
+
 export interface WebSocketAdapterOptions extends NodeOptions {}
 
 export interface WebSocketAdapter extends Omit<NodeAdapter, 'handleUpgrade'> {

@@ -1,6 +1,8 @@
 import { UWebSocketAdapterOptions } from '@hattip/adapter-uwebsockets'
 import crossws, { UWSAdapter, UWSOptions } from 'crossws/adapters/uws'
 
+export * from '../../core.js'
+
 export interface WebSocketAdapterOptions extends UWSOptions {
   /**
    * The path to the WebSocket endpoint.
