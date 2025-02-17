@@ -48,7 +48,7 @@ export function createWebSocketAdapter(
     handler: context => {
       const { request, platform, next } = context
       if (request.headers.get('upgrade') === 'websocket') {
-        forwardHattipContext(request, context)
+        forwardHattipContext(request as any, context)
         return handleUpgrade(request, platform.env, platform.context) as any
       }
       return next()
