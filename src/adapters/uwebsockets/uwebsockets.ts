@@ -1,4 +1,8 @@
-import { UWebSocketAdapterOptions } from '@hattip/adapter-uwebsockets'
+/// <reference types="uws" />
+import type {
+  UWebSocketAdapterOptions,
+  UWebSocketPlatformInfo,
+} from '@hattip/adapter-uwebsockets'
 import crossws, { UWSOptions } from 'crossws/adapters/uws'
 import type {
   WebSocketAdapter as Adapter,
@@ -7,11 +11,14 @@ import type {
 
 export * from '../../core.js'
 
+type HttpRequest = UWebSocketPlatformInfo['request']
+type HttpResponse = UWebSocketPlatformInfo['response']
+
 export interface WebSocketAdapterOptions
   extends Omit<UWSOptions, keyof AdapterOptions>,
-    AdapterOptions {}
+    AdapterOptions<UWebSocketPlatformInfo, HttpRequest, HttpResponse> {}
 
-export interface WebSocketAdapter extends Adapter {
+export interface WebSocketAdapter extends Adapter<UWebSocketPlatformInfo> {
   configureServer: UWebSocketAdapterOptions['configureServer']
 }
 

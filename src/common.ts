@@ -13,10 +13,7 @@ export interface Peer<P = unknown> extends crossws.Peer {
  */
 export type PeerContext<P = unknown> = ReturnType<typeof getForwardedContext<P>>
 
-export function forwardHattipContext(
-  target: { context?: any },
-  context: RequestContext
-) {
+export function forwardHattipContext(target: any, context: RequestContext) {
   if (target.context) {
     Object.assign(target.context, getForwardedContext(context))
   } else {

@@ -13,7 +13,7 @@ export * from '../../core.js'
 
 export interface WebSocketAdapterOptions
   extends Omit<NodeOptions, keyof AdapterOptions>,
-    AdapterOptions<NodePlatformInfo> {}
+    AdapterOptions<NodePlatformInfo, Request, Response> {}
 
 export interface WebSocketAdapter extends Adapter<NodePlatformInfo> {
   handler: RequestHandler<NodePlatformInfo>

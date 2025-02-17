@@ -13,9 +13,10 @@ export * from '../../core.js'
 
 export interface WebSocketAdapterOptions
   extends Omit<CloudflareOptions, keyof AdapterOptions>,
-    AdapterOptions {}
+    AdapterOptions<CloudflareWorkersPlatformInfo, Request, Response> {}
 
-export interface WebSocketAdapter extends Adapter {
+export interface WebSocketAdapter
+  extends Adapter<CloudflareWorkersPlatformInfo> {
   handler: RequestHandler<CloudflareWorkersPlatformInfo>
 }
 
@@ -44,12 +45,16 @@ export function createWebSocketAdapter(
   const { handleUpgrade, ...adapter } = crossws(options as any)
 
   return {
-    ...(adapter as WebSocketAdapter),
+    ...(adapter as any),
     handler: context => {
       const { request, platform, next } = context
       if (request.headers.get('upgrade') === 'websocket') {
-        forwardHattipContext(request as any, context)
-        return handleUpgrade(request, platform.env, platform.context) as any
+        forwardHattipContext(request, context)
+        return handleUpgrade(
+          request as any,
+          platform.env,
+          platform.context
+        ) as any
       }
       return next()
     },

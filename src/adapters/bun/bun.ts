@@ -1,3 +1,4 @@
+/// <reference types="bun" />
 import type { BunPlatformInfo } from '@hattip/adapter-bun'
 import type { RequestHandler } from '@hattip/compose'
 import crossws, { BunAdapter, BunOptions } from 'crossws/adapters/bun'
@@ -11,9 +12,9 @@ export * from '../../core.js'
 
 export interface WebSocketAdapterOptions
   extends Omit<BunOptions, keyof AdapterOptions>,
-    AdapterOptions {}
+    AdapterOptions<BunPlatformInfo, Request, Response> {}
 
-export interface WebSocketAdapter extends Adapter {
+export interface WebSocketAdapter extends Adapter<BunPlatformInfo> {
   handler: RequestHandler<BunPlatformInfo>
   websocket: BunAdapter['websocket']
 }

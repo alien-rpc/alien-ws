@@ -1,4 +1,4 @@
-/// <reference types="deno/ns" />
+/// <reference types="deno/full" />
 import type { DenoPlatformInfo } from '@hattip/adapter-deno'
 import type { RequestHandler } from '@hattip/compose'
 import crossws, { DenoOptions } from 'crossws/adapters/deno'
@@ -10,12 +10,14 @@ import type {
 
 export * from '../../core.js'
 
+type PlatformInfo = DenoPlatformInfo<Deno.ServeHandlerInfo>
+
 export interface WebSocketAdapterOptions
   extends Omit<DenoOptions, keyof AdapterOptions>,
-    AdapterOptions {}
+    AdapterOptions<PlatformInfo, Request, Response> {}
 
-export interface WebSocketAdapter extends Adapter {
-  handler: RequestHandler<DenoPlatformInfo<Deno.ServeHandlerInfo>>
+export interface WebSocketAdapter extends Adapter<PlatformInfo> {
+  handler: RequestHandler<PlatformInfo>
 }
 
 /**
