@@ -1,0 +1,73 @@
+{
+  "name": "hattip-ws",
+  "type": "module",
+  "version": "0.0.0",
+  "exports": {
+    ".": {
+      "types": "./dist/core.d.ts",
+      "default": "./dist/core.js"
+    },
+    "./adapters/*": {
+      "types": "./dist/adapters/*/*.d.ts",
+      "default": "./dist/adapters/*/*.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "author": "Alec Larson",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alloc/hattip-ws.git"
+  },
+  "prettier": "@alloc/prettier-config",
+  "scripts": {
+    "dev": "rimraf dist && tsup --sourcemap --watch",
+    "build": "rimraf dist && tsup",
+    "lint": "tsc -p . --outDir node_modules/.tmp",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "crossws": "^0.3.4"
+  },
+  "peerDependencies": {
+    "@cloudflare/workers-types": "*",
+    "@hattip/adapter-bun": "*",
+    "@hattip/adapter-cloudflare-workers": "*",
+    "@hattip/adapter-deno": "*",
+    "@hattip/adapter-uwebsockets": "*",
+    "@hattip/compose": "*",
+    "@types/node": "*"
+  },
+  "peerDependenciesMeta": {
+    "@cloudflare/workers-types": {
+      "optional": true
+    },
+    "@hattip/adapter-bun": {
+      "optional": true
+    },
+    "@hattip/adapter-cloudflare-workers": {
+      "optional": true
+    },
+    "@hattip/adapter-deno": {
+      "optional": true
+    },
+    "@hattip/adapter-uwebsockets": {
+      "optional": true
+    },
+    "@types/node": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@alloc/prettier-config": "^1.0.0",
+    "@types/deno": "npm:@teidesu/deno-types@*",
+    "prettier": "^3.4.2",
+    "radashi": "^12.3.0",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
