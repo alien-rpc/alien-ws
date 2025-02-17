@@ -24,6 +24,21 @@ Deno.serve(createServeHandler(compose(ws.handler, httpHandler)))
 
 3. Refer to [this guide](https://crossws.unjs.io/guide/hooks) for the available hooks.
 
+### Peer context
+
+Every hook (except `upgrade`) receives a [peer](https://crossws.unjs.io/guide/peer) as its first argument.
+
+Each peer has a `context` property that contains the Hattip context, which your Hattip middlewares can define new properties on.
+
+The following properties are always available on `peer.context`:
+
+- `url: URL` The URL that facilitated the WebSocket upgrade.
+- `env: (name: string) => string` A function to access environment variables in a platform-agnostic way.
+- `locals: Record<string, unknown>` A mutable object that can be used to store data for the duration of the WebSocket connection.
+- `platform: DenoPlatformInfo`
+  - `name: "deno"`
+  - `info: Deno.ServeInfo` The Deno serve info object.
+
 ### WebSocketAdapter API
 
 The adapter returned by the `createWebSocketAdapter` function has the following properties:
