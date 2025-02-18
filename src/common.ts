@@ -1,5 +1,6 @@
 import type { RequestContext } from '@hattip/compose'
 import * as crossws from 'crossws'
+import { omit } from 'radashi'
 import type { Hooks, ResolveHooks } from './core.js'
 import type { WebSocketAdapterOptions } from './index.js'
 
@@ -11,32 +12,30 @@ export interface Peer<P = unknown> extends crossws.Peer {
 /**
  * Hattip context available through the `peer.context` property.
  */
-export type PeerContext<P = unknown> = ReturnType<typeof getForwardedContext<P>>
+export type PeerContext<P = unknown> = Omit<
+  RequestContext<P>,
+  (typeof ignoredContextKeys)[number]
+>
+
+const ignoredContextKeys = [
+  'handleError',
+  'ip',
+  'method',
+  'next',
+  'passThrough',
+  'request',
+  'waitUntil',
+] as const
 
 export function forwardHattipContext(target: any, context: RequestContext) {
   if (target.context) {
-    Object.assign(target.context, getForwardedContext(context))
+    Object.assign(target.context, omit(context, ignoredContextKeys))
   } else {
     Object.defineProperty(target, 'context', {
       enumerable: true,
-      value: getForwardedContext(context),
+      value: omit(context, ignoredContextKeys),
     })
   }
-}
-
-function getForwardedContext<P>(context: RequestContext<P>) {
-  const {
-    handleError,
-    ip,
-    method,
-    next,
-    passThrough,
-    request,
-    waitUntil,
-    ...forwardedContext
-  } = context
-
-  return forwardedContext
 }
 
 export function interceptUpgrade(
