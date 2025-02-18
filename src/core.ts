@@ -1,7 +1,7 @@
-import { Message, WSError } from 'crossws'
-import { Peer, PeerContext } from './common.js'
+import type { Message, WSError } from 'crossws'
+import type { Peer, PeerContext } from './common.js'
 
-export { Message, Peer, PeerContext, WSError }
+export type { Message, Peer, PeerContext, WSError }
 
 type MaybePromise<T> = T | Promise<T>
 
