@@ -22,7 +22,6 @@ const ignoredContextKeys = [
   'method',
   'next',
   'passThrough',
-  'request',
   'waitUntil',
 ] as const
 
