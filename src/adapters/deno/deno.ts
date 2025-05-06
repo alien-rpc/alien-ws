@@ -1,8 +1,8 @@
 /// <reference types="deno/full" />
 import type { DenoPlatformInfo } from '@hattip/adapter-deno'
-import type { RequestHandler } from '@hattip/compose'
+import { RequestContext } from 'alien-middleware'
 import crossws, { DenoOptions } from 'crossws/adapters/deno'
-import { forwardHattipContext } from '../../common.js'
+import { forwardHattipContext, RequestHandler } from '../../common.js'
 import type {
   WebSocketAdapter as Adapter,
   WebSocketAdapterOptions as AdapterOptions,
@@ -12,12 +12,21 @@ export * from '../../core.js'
 
 type PlatformInfo = DenoPlatformInfo<Deno.ServeHandlerInfo>
 
-export interface WebSocketAdapterOptions
-  extends Omit<DenoOptions, keyof AdapterOptions>,
-    AdapterOptions<PlatformInfo, Request, Response> {}
+export interface WebSocketAdapterOptions<
+  TEnv extends object = any,
+  TProperties extends object = never,
+> extends Omit<DenoOptions, keyof AdapterOptions>,
+    AdapterOptions<
+      RequestContext<TEnv, TProperties, PlatformInfo>,
+      Request,
+      Response
+    > {}
 
-export interface WebSocketAdapter extends Adapter<PlatformInfo> {
-  handler: RequestHandler<PlatformInfo>
+export interface WebSocketAdapter<
+  TEnv extends object = any,
+  TProperties extends object = never,
+> extends Adapter<RequestContext<TEnv, TProperties, PlatformInfo>> {
+  handler: RequestHandler<TEnv, TProperties, PlatformInfo, Response>
 }
 
 /**
@@ -36,20 +45,22 @@ export interface WebSocketAdapter extends Adapter<PlatformInfo> {
  * Deno.serve(createServeHandler(compose(ws.handler, httpHandler)))
  * ```
  */
-export function createWebSocketAdapter(
-  options?: WebSocketAdapterOptions
-): WebSocketAdapter {
-  const { handleUpgrade, ...adapter } = crossws(options as any)
+export function createWebSocketAdapter<
+  TEnv extends object = {},
+  TProperties extends object = never,
+>(
+  options?: WebSocketAdapterOptions<TEnv, TProperties>
+): WebSocketAdapter<TEnv, TProperties> {
+  const { handleUpgrade, ...adapter } = crossws(options as DenoOptions)
 
   return {
-    ...(adapter as WebSocketAdapter),
+    ...(adapter as WebSocketAdapter<TEnv, TProperties>),
     handler: context => {
-      const { request, platform, next } = context
+      const { request, platform } = context
       if (request.headers.get('upgrade') === 'websocket') {
         forwardHattipContext(request, context)
         return handleUpgrade(request, platform.info as any)
       }
-      return next()
     },
   }
 }

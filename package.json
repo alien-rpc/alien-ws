@@ -38,8 +38,8 @@
     "@hattip/adapter-deno": "*",
     "@hattip/adapter-node": "*",
     "@hattip/adapter-uwebsockets": "*",
-    "@hattip/compose": "*",
-    "@types/node": "*"
+    "@types/node": "*",
+    "alien-middleware": "*"
   },
   "peerDependenciesMeta": {
     "@cloudflare/workers-types": {
@@ -60,9 +60,6 @@
     "@hattip/adapter-uwebsockets": {
       "optional": true
     },
-    "@hattip/compose": {
-      "optional": true
-    },
     "@types/node": {
       "optional": true
     }
@@ -72,6 +69,7 @@
     "@types/bun": "^1.2.2",
     "@types/deno": "npm:@teidesu/deno-types@*",
     "@types/uws": "^0.13.6",
+    "alien-middleware": "^0.8.0",
     "prettier": "^3.4.2",
     "rimraf": "^6.0.1",
     "tsup": "^8.3.5",

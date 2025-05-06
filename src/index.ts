@@ -3,19 +3,19 @@ import { Hooks, Peer, ResolveHooks } from './core.js'
 export * from './core.js'
 
 export interface WebSocketAdapterOptions<
-  TPlatform = unknown,
+  TContext extends object = any,
   TRequest extends object = any,
   TResponse extends object = any,
 > {
-  resolve?: ResolveHooks<TPlatform, TRequest, TResponse>
-  hooks?: Partial<Hooks<TPlatform, TRequest, TResponse>>
+  resolve?: ResolveHooks<TContext, TRequest, TResponse>
+  hooks?: Partial<Hooks<TContext, TRequest, TResponse>>
 }
 
-export interface WebSocketAdapter<P = unknown> {
-  readonly peers: Set<Peer<P>>
-  readonly publish: Peer<P>['publish']
+export interface WebSocketAdapter<TContext extends object = any> {
+  readonly peers: Set<Peer<TContext>>
+  readonly publish: Peer<TContext>['publish']
 }
 
-export type WebSocketAdapterFactory<P = unknown> = (
-  options?: WebSocketAdapterOptions<P>
-) => WebSocketAdapter<P>
+export type WebSocketAdapterFactory<TContext extends object = any> = (
+  options?: WebSocketAdapterOptions<TContext>
+) => WebSocketAdapter<TContext>

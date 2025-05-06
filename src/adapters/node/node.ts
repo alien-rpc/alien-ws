@@ -1,9 +1,13 @@
 /// <reference types="node" />
 import type { NodePlatformInfo } from '@hattip/adapter-node'
-import type { RequestContext, RequestHandler } from '@hattip/compose'
+import { RequestContext } from 'alien-middleware'
 import crossws, { NodeAdapter, NodeOptions } from 'crossws/adapters/node'
 import * as http from 'node:http'
-import { forwardHattipContext, interceptUpgrade } from '../../common.js'
+import {
+  forwardHattipContext,
+  interceptUpgrade,
+  RequestHandler,
+} from '../../common.js'
 import type {
   WebSocketAdapter as Adapter,
   WebSocketAdapterOptions as AdapterOptions,
@@ -11,12 +15,21 @@ import type {
 
 export * from '../../core.js'
 
-export interface WebSocketAdapterOptions
-  extends Omit<NodeOptions, keyof AdapterOptions>,
-    AdapterOptions<NodePlatformInfo, Request, Response> {}
+export interface WebSocketAdapterOptions<
+  TEnv extends object = any,
+  TProperties extends object = never,
+> extends Omit<NodeOptions, keyof AdapterOptions>,
+    AdapterOptions<
+      RequestContext<TEnv, TProperties, NodePlatformInfo>,
+      Request,
+      Response
+    > {}
 
-export interface WebSocketAdapter extends Adapter<NodePlatformInfo> {
-  handler: RequestHandler<NodePlatformInfo>
+export interface WebSocketAdapter<
+  TEnv extends object = any,
+  TProperties extends object = never,
+> extends Adapter<RequestContext<TEnv, TProperties, NodePlatformInfo>> {
+  handler: RequestHandler<TEnv, TProperties, NodePlatformInfo, Response>
   configureServer: (server: http.Server) => void
   closeAll: NodeAdapter['closeAll']
 }
@@ -38,9 +51,12 @@ export interface WebSocketAdapter extends Adapter<NodePlatformInfo> {
  * ws.configureServer(server)
  * ```
  */
-export function createWebSocketAdapter(
-  options?: WebSocketAdapterOptions
-): WebSocketAdapter {
+export function createWebSocketAdapter<
+  TEnv extends object = {},
+  TProperties extends object = never,
+>(
+  options?: WebSocketAdapterOptions<TEnv, TProperties>
+): WebSocketAdapter<TEnv, TProperties> {
   const upgradeRequests = new WeakMap<http.IncomingMessage, Buffer>()
   let upgradedContext: RequestContext | undefined
 
@@ -48,11 +64,11 @@ export function createWebSocketAdapter(
     interceptUpgrade(options, request => {
       forwardHattipContext(request, upgradedContext!)
       upgradedContext = undefined
-    }) as any
+    }) as NodeOptions
   )
 
   return {
-    ...(adapter as WebSocketAdapter),
+    ...(adapter as WebSocketAdapter<TEnv, TProperties>),
     handler: context => {
       const { request } = context.platform
       const head = upgradeRequests.get(request)
@@ -61,7 +77,6 @@ export function createWebSocketAdapter(
         upgradedContext = context
         return handleUpgrade(request, request.socket, head)
       }
-      return context.next()
     },
     configureServer(server) {
       server.on('upgrade', (request, _socket, head) => {

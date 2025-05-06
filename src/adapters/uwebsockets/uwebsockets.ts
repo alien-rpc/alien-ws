@@ -3,6 +3,7 @@ import type {
   UWebSocketAdapterOptions,
   UWebSocketPlatformInfo,
 } from '@hattip/adapter-uwebsockets'
+import { RequestContext } from 'alien-middleware'
 import crossws, { UWSOptions } from 'crossws/adapters/uws'
 import type {
   WebSocketAdapter as Adapter,
@@ -14,11 +15,20 @@ export * from '../../core.js'
 type HttpRequest = UWebSocketPlatformInfo['request']
 type HttpResponse = UWebSocketPlatformInfo['response']
 
-export interface WebSocketAdapterOptions
-  extends Omit<UWSOptions, keyof AdapterOptions>,
-    AdapterOptions<UWebSocketPlatformInfo, HttpRequest, HttpResponse> {}
+export interface WebSocketAdapterOptions<
+  TEnv extends object = any,
+  TProperties extends object = never,
+> extends Omit<UWSOptions, keyof AdapterOptions>,
+    AdapterOptions<
+      RequestContext<TEnv, TProperties, UWebSocketPlatformInfo>,
+      HttpRequest,
+      HttpResponse
+    > {}
 
-export interface WebSocketAdapter extends Adapter<UWebSocketPlatformInfo> {
+export interface WebSocketAdapter<
+  TEnv extends object = any,
+  TProperties extends object = never,
+> extends Adapter<RequestContext<TEnv, TProperties, UWebSocketPlatformInfo>> {
   configureServer: UWebSocketAdapterOptions['configureServer']
 }
 
@@ -40,13 +50,16 @@ export interface WebSocketAdapter extends Adapter<UWebSocketPlatformInfo> {
  * })
  * ```
  */
-export function createWebSocketAdapter(
-  options?: WebSocketAdapterOptions
-): WebSocketAdapter {
-  const { websocket, ...adapter } = crossws(options as any)
+export function createWebSocketAdapter<
+  TEnv extends object = any,
+  TProperties extends object = never,
+>(
+  options?: WebSocketAdapterOptions<TEnv, TProperties>
+): WebSocketAdapter<TEnv, TProperties> {
+  const { websocket, ...adapter } = crossws(options as UWSOptions)
 
   return {
-    ...(adapter as WebSocketAdapter),
+    ...(adapter as WebSocketAdapter<TEnv, TProperties>),
     configureServer(app) {
       app.ws('/*', websocket)
     },

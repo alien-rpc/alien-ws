@@ -1,5 +1,5 @@
 import { createServer, NodePlatformInfo } from '@hattip/adapter-node'
-import { compose, RequestHandler } from '@hattip/compose'
+import { chain } from 'alien-middleware'
 import * as http from 'node:http'
 import { AddressInfo } from 'node:net'
 import {
@@ -7,14 +7,17 @@ import {
   Message,
   Peer,
 } from '../src/adapters/node/node.js'
+import { RequestHandler } from '../src/common.js'
 
 let server: http.Server
 afterEach(() => {
   server?.close()
 })
 
+type NodeHandler = RequestHandler<{}, never, NodePlatformInfo, Response>
+
 test('node adapter', async () => {
-  const handler = vi.fn<RequestHandler<NodePlatformInfo>>()
+  const handler = vi.fn<NodeHandler>()
 
   const onOpen = vi.fn()
   const onMessage = vi.fn()
@@ -28,7 +31,9 @@ test('node adapter', async () => {
     },
   })
 
-  server = createServer(compose(handler, wss.handler))
+  server = createServer(
+    chain<{}, {}, NodePlatformInfo>().use(handler).use(wss.handler)
+  )
   wss.configureServer(server)
 
   await new Promise<void>(resolve => server.listen(resolve))

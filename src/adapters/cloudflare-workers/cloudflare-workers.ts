@@ -1,23 +1,38 @@
 /// <reference types="@cloudflare/workers-types" />
 import type { CloudflareWorkersPlatformInfo } from '@hattip/adapter-cloudflare-workers'
-import type { RequestHandler } from '@hattip/compose'
 import crossws, { CloudflareOptions } from 'crossws/adapters/cloudflare'
 import type {
   WebSocketAdapter as Adapter,
   WebSocketAdapterOptions as AdapterOptions,
 } from '../../index.js'
 
-import { forwardHattipContext } from '../../common.js'
+import { RequestContext } from 'alien-middleware'
+import { forwardHattipContext, RequestHandler } from '../../common.js'
 
 export * from '../../core.js'
 
-export interface WebSocketAdapterOptions
-  extends Omit<CloudflareOptions, keyof AdapterOptions>,
-    AdapterOptions<CloudflareWorkersPlatformInfo, Request, Response> {}
+export interface WebSocketAdapterOptions<
+  TEnv extends object = any,
+  TProperties extends object = never,
+> extends Omit<CloudflareOptions, keyof AdapterOptions>,
+    AdapterOptions<
+      RequestContext<TEnv, TProperties, CloudflareWorkersPlatformInfo>,
+      Request,
+      Response
+    > {}
 
-export interface WebSocketAdapter
-  extends Adapter<CloudflareWorkersPlatformInfo> {
-  handler: RequestHandler<CloudflareWorkersPlatformInfo>
+export interface WebSocketAdapter<
+  TEnv extends object = any,
+  TProperties extends object = never,
+> extends Adapter<
+    RequestContext<TEnv, TProperties, CloudflareWorkersPlatformInfo>
+  > {
+  handler: RequestHandler<
+    TEnv,
+    TProperties,
+    CloudflareWorkersPlatformInfo,
+    Response
+  >
 }
 
 /**
@@ -39,15 +54,18 @@ export interface WebSocketAdapter
  * }
  * ```
  */
-export function createWebSocketAdapter(
-  options?: WebSocketAdapterOptions
-): WebSocketAdapter {
-  const { handleUpgrade, ...adapter } = crossws(options as any)
+export function createWebSocketAdapter<
+  TEnv extends object = {},
+  TProperties extends object = never,
+>(
+  options?: WebSocketAdapterOptions<TEnv, TProperties>
+): WebSocketAdapter<TEnv, TProperties> {
+  const { handleUpgrade, ...adapter } = crossws(options as CloudflareOptions)
 
   return {
-    ...(adapter as any),
+    ...(adapter as WebSocketAdapter<TEnv, TProperties>),
     handler: context => {
-      const { request, platform, next } = context
+      const { request, platform } = context
       if (request.headers.get('upgrade') === 'websocket') {
         forwardHattipContext(request, context)
         return handleUpgrade(
@@ -56,7 +74,6 @@ export function createWebSocketAdapter(
           platform.context
         ) as any
       }
-      return next()
     },
   }
 }

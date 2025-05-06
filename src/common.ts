@@ -1,26 +1,39 @@
-import type { RequestContext } from '@hattip/compose'
+import type {
+  MiddlewareChain,
+  MiddlewareContext,
+  RequestContext,
+} from 'alien-middleware'
 import * as crossws from 'crossws'
 import type { Hooks, ResolveHooks } from './core.js'
 import type { WebSocketAdapterOptions } from './index.js'
 
+type Awaitable<T> = Promise<T> | T
+
+export type RequestHandler<
+  TEnv extends object = any,
+  TProperties extends object = never,
+  TPlatform = unknown,
+  TResponse = any,
+> = (
+  context: RequestContext<TEnv, TProperties, TPlatform>
+) => Awaitable<TResponse | void>
+
 // Override the `context` property to be typed as `PeerContext`.
-export interface Peer<P = unknown> extends crossws.Peer {
-  context: PeerContext<P> & Record<string, unknown>
+export interface Peer<TContext extends object> extends crossws.Peer {
+  context: TContext & Record<string, unknown>
 }
 
 /**
  * Hattip context available through the `peer.context` property.
  */
-export type PeerContext<P = unknown> = Omit<
-  RequestContext<P>,
+export type PeerContext<TMiddleware extends MiddlewareChain = any> = Omit<
+  MiddlewareContext<TMiddleware>,
   (typeof ignoredContextKeys)[number]
 >
 
 const ignoredContextKeys = [
-  'handleError',
   'ip',
-  'method',
-  'next',
+  'setHeader',
   'passThrough',
   'waitUntil',
 ] as const
