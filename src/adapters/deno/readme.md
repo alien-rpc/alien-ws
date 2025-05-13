@@ -1,16 +1,16 @@
-# hattip-ws/deno
+# alien-ws/deno
 
 1. Install the dependencies:
 
 ```sh
-deno install npm:hattip-ws npm:@hattip/adapter-deno npm:@hattip/compose
+deno install npm:alien-ws npm:@hattip/adapter-deno npm:alien-middleware
 ```
 
 2. Create the adapter and use its handler:
 
 ```ts
-import { compose } from 'npm:@hattip/compose'
-import { createWebSocketAdapter } from 'npm:hattip-ws/deno'
+import { chain } from 'npm:alien-middleware'
+import { createWebSocketAdapter } from 'npm:alien-ws/deno'
 import { createServeHandler } from 'npm:@hattip/adapter-deno'
 import httpHandler from './http-handler.ts'
 
@@ -19,7 +19,7 @@ const ws = createWebSocketAdapter({
   hooks: { … },
 })
 
-Deno.serve(createServeHandler(compose(ws.handler, httpHandler)))
+Deno.serve(createServeHandler(chain().use(ws.handler).use(httpHandler)))
 ```
 
 3. Refer to [this guide](https://crossws.unjs.io/guide/hooks) for the available hooks.

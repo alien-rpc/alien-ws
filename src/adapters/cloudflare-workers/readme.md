@@ -1,16 +1,16 @@
-# hattip-ws/cloudflare-workers
+# alien-ws/cloudflare-workers
 
 1. Install the dependencies:
 
 ```sh
-pnpm add hattip-ws @hattip/adapter-cloudflare-workers @hattip/compose
+pnpm add alien-ws @hattip/adapter-cloudflare-workers alien-middleware
 ```
 
 2. Create the adapter and use its handler:
 
 ```ts
-import { compose } from '@hattip/compose'
-import { createWebSocketAdapter } from 'hattip-ws/cloudflare-workers'
+import { chain } from 'alien-middleware'
+import { createWebSocketAdapter } from 'alien-ws/cloudflare-workers'
 import cloudflareAdapter from '@hattip/adapter-cloudflare-workers'
 import httpHandler from './http-handler.ts'
 
@@ -20,7 +20,7 @@ const ws = createWebSocketAdapter({
 })
 
 export default {
-  fetch: cloudflareAdapter(compose(ws.handler, httpHandler)),
+  fetch: cloudflareAdapter(chain().use(ws.handler).use(httpHandler)),
 }
 ```
 

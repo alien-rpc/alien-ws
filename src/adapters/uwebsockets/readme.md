@@ -1,16 +1,16 @@
-# hattip-ws/uwebsockets
+# alien-ws/uwebsockets
 
 1. Install the dependencies:
 
 ```sh
-pnpm add hattip-ws @hattip/adapter-uwebsockets
+pnpm add alien-ws @hattip/adapter-uwebsockets
 ```
 
 2. Create the adapter and use its `configureServer` method:
 
 ```ts
 import { createServer } from '@hattip/adapter-uwebsockets'
-import { createWebSocketAdapter } from 'hattip-ws/uwebsockets'
+import { createWebSocketAdapter } from 'alien-ws/uwebsockets'
 import httpHandler from './http-handler.ts'
 
 const ws = createWebSocketAdapter({

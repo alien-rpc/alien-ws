@@ -1,16 +1,16 @@
-# hattip-ws
+# alien-ws
 
-A lightweight wrapper that helps you integrate `crossws` with [Hattip](https://github.com/hattipjs/hattip).
+A lightweight wrapper that helps you integrate `crossws` with [Hattip](https://github.com/hattipjs/hattip) and [alien-middleware](https://github.com/alien-rpc/alien-middleware).
 
 ## Usage
 
 Follow the instructions for your server:
 
-- [Node.js](https://github.com/alloc/hattip-ws/tree/main/src/adapters/node)
-- [Deno](https://github.com/alloc/hattip-ws/tree/main/src/adapters/deno)
-- [Cloudflare Workers](https://github.com/alloc/hattip-ws/tree/main/src/adapters/cloudflare-workers)
-- [Bun](https://github.com/alloc/hattip-ws/tree/main/src/adapters/bun)
-- [UWS](https://github.com/alloc/hattip-ws/tree/main/src/adapters/uwebsockets)
+- [Node.js](https://github.com/alien-rpc/alien-ws/tree/main/src/adapters/node)
+- [Deno](https://github.com/alien-rpc/alien-ws/tree/main/src/adapters/deno)
+- [Cloudflare Workers](https://github.com/alien-rpc/alien-ws/tree/main/src/adapters/cloudflare-workers)
+- [Bun](https://github.com/alien-rpc/alien-ws/tree/main/src/adapters/bun)
+- [UWS](https://github.com/alien-rpc/alien-ws/tree/main/src/adapters/uwebsockets)
 
 ## Framework Usage
 
@@ -21,5 +21,5 @@ import type {
   WebSocketAdapterFactory,
   WebSocketAdapterOptions,
   WebSocketAdapter,
-} from 'hattip-ws'
+} from 'alien-ws'
 ```

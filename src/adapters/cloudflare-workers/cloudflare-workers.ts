@@ -40,8 +40,8 @@ export interface WebSocketAdapter<
  * `handler` property into your Cloudflare Workers app like this:
  *
  * ```ts
- * import { compose } from '@hattip/compose'
- * import { createWebSocketAdapter } from 'hattip-ws/cloudflare-workers'
+ * import { compose } from 'alien-middleware'
+ * import { createWebSocketAdapter } from 'alien-ws/cloudflare-workers'
  * import cloudflareAdapter from '@hattip/adapter-cloudflare-workers'
  * import httpHandler from './http-handler.ts'
  *

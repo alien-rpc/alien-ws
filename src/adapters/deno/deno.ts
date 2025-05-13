@@ -33,8 +33,8 @@ export interface WebSocketAdapter<
  * Call this factory function to get an adapter instance. Then pass its
  * `handler` property into your Deno server like this:
  * ```ts
- * import { compose } from 'npm:@hattip/compose'
- * import { createWebSocketAdapter } from 'npm:hattip-ws/deno'
+ * import { compose } from 'npm:alien-middleware'
+ * import { createWebSocketAdapter } from 'npm:alien-ws/deno'
  * import { createServeHandler } from 'npm:@hattip/adapter-deno'
  * import httpHandler from './http-handler.ts'
  *

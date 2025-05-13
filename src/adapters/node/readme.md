@@ -1,17 +1,17 @@
-# hattip-ws/node
+# alien-ws/node
 
 1. Install the dependencies:
 
 ```sh
-pnpm add hattip-ws @hattip/adapter-node @hattip/compose
+pnpm add alien-ws @hattip/adapter-node alien-middleware
 ```
 
 2. Create the adapter and use its handler and `configureServer` method:
 
 ```ts
-import { compose } from '@hattip/compose'
+import { chain } from 'alien-middleware'
 import { createServer } from '@hattip/adapter-node'
-import { createWebSocketAdapter } from 'hattip-ws/node'
+import { createWebSocketAdapter } from 'alien-ws/node'
 import httpHandler from './http-handler.ts'
 
 const ws = createWebSocketAdapter({
@@ -19,7 +19,7 @@ const ws = createWebSocketAdapter({
   hooks: { … },
 })
 
-const server = createServer(compose(httpHandler, ws.handler))
+const server = createServer(chain().use(httpHandler).use(ws.handler))
 ws.configureServer(server)
 
 export default server

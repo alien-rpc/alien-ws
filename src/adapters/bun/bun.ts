@@ -33,8 +33,8 @@ export interface WebSocketAdapter<
  * `handler` and `websocket` properties into your Bun server like this:
  *
  * ```ts
- * import { compose } from '@hattip/compose'
- * import { createWebSocketAdapter } from 'hattip-ws/bun'
+ * import { compose } from 'alien-middleware'
+ * import { createWebSocketAdapter } from 'alien-ws/bun'
  * import bunAdapter from '@hattip/adapter-bun'
  * import httpHandler from './http-handler.ts'
  *

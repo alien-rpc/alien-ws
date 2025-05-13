@@ -1,16 +1,16 @@
-# hattip-ws/bun
+# alien-ws/bun
 
 1. Install the dependencies:
 
 ```sh
-bun add hattip-ws @hattip/adapter-bun @hattip/compose
+bun add alien-ws @hattip/adapter-bun alien-middleware
 ```
 
 2. Create the adapter and use its handler and `websocket` property:
 
 ```ts
-import { compose } from '@hattip/compose'
-import { createWebSocketAdapter } from 'hattip-ws/bun'
+import { chain } from 'alien-middleware'
+import { createWebSocketAdapter } from 'alien-ws/bun'
 import bunAdapter from '@hattip/adapter-bun'
 import httpHandler from './http-handler.ts'
 
@@ -19,7 +19,7 @@ const ws = createWebSocketAdapter({
   hooks: { … },
 })
 
-export default bunAdapter(compose(ws.handler, httpHandler), {
+export default bunAdapter(chain().use(ws.handler).use(httpHandler), {
   websocket: ws.websocket,
 })
 ```

@@ -38,9 +38,9 @@ export interface WebSocketAdapter<
  * Call this factory function to get an adapter instance. Then call its
  * `configureServer` method with your HTTP server like this:
  * ```ts
- * import { compose } from '@hattip/compose'
+ * import { compose } from 'alien-middleware'
  * import { createServer } from '@hattip/adapter-node'
- * import { createWebSocketAdapter } from 'hattip-ws/node'
+ * import { createWebSocketAdapter } from 'alien-ws/node'
  * import httpHandler from './http-handler.ts'
  *
  * const ws = createWebSocketAdapter({

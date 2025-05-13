@@ -38,7 +38,7 @@ export interface WebSocketAdapter<
  *
  * ```ts
  * import { createServer } from '@hattip/adapter-uwebsockets'
- * import { createWebSocketAdapter } from 'hattip-ws/uwebsockets'
+ * import { createWebSocketAdapter } from 'alien-ws/uwebsockets'
  * import httpHandler from './http-handler.ts'
  *
  * const ws = createWebSocketAdapter({
