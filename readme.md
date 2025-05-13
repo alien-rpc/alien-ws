@@ -2,6 +2,9 @@
 
 A lightweight wrapper that helps you integrate `crossws` with [Hattip](https://github.com/hattipjs/hattip).
 
+> [!WARNING]
+> This package is unmaintained. Check out [alien-ws](https://github.com/alien-rpc/alien-ws) for a maintained alternative. The difference is which middleware library is used (`@hattip/compose` vs `alien-middleware`). If you wish to maintain this package, let me now and I'll transfer it to you.
+
 ## Usage
 
 Follow the instructions for your server:
