@@ -25,7 +25,11 @@ export interface WebSocketAdapterOptions<
 export interface WebSocketAdapter<
   TEnv extends object = any,
   TProperties extends object = never,
-> extends Adapter<RequestContext<TEnv, TProperties, PlatformInfo>> {
+> extends Adapter<
+    RequestContext<TEnv, TProperties, PlatformInfo>,
+    Request,
+    Response
+  > {
   handler: RequestHandler<TEnv, TProperties, PlatformInfo, Response>
 }
 

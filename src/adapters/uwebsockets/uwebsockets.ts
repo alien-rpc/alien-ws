@@ -28,7 +28,11 @@ export interface WebSocketAdapterOptions<
 export interface WebSocketAdapter<
   TEnv extends object = any,
   TProperties extends object = never,
-> extends Adapter<RequestContext<TEnv, TProperties, UWebSocketPlatformInfo>> {
+> extends Adapter<
+    RequestContext<TEnv, TProperties, UWebSocketPlatformInfo>,
+    HttpRequest,
+    HttpResponse
+  > {
   configureServer: UWebSocketAdapterOptions['configureServer']
 }
 

@@ -25,7 +25,9 @@ export interface WebSocketAdapter<
   TEnv extends object = any,
   TProperties extends object = never,
 > extends Adapter<
-    RequestContext<TEnv, TProperties, CloudflareWorkersPlatformInfo>
+    RequestContext<TEnv, TProperties, CloudflareWorkersPlatformInfo>,
+    Request,
+    Response
   > {
   handler: RequestHandler<
     TEnv,

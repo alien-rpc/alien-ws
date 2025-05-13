@@ -28,7 +28,11 @@ export interface WebSocketAdapterOptions<
 export interface WebSocketAdapter<
   TEnv extends object = any,
   TProperties extends object = never,
-> extends Adapter<RequestContext<TEnv, TProperties, NodePlatformInfo>> {
+> extends Adapter<
+    RequestContext<TEnv, TProperties, NodePlatformInfo>,
+    Request,
+    Response
+  > {
   handler: RequestHandler<TEnv, TProperties, NodePlatformInfo, Response>
   configureServer: (server: http.Server) => void
   closeAll: NodeAdapter['closeAll']
