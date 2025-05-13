@@ -1,5 +1,5 @@
 {
-  "name": "hattip-ws",
+  "name": "alien-ws",
   "type": "module",
   "version": "0.1.7",
   "exports": {
@@ -19,7 +19,7 @@
   "author": "Alec Larson",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alloc/hattip-ws.git"
+    "url": "https://github.com/alien-rpc/alien-ws.git"
   },
   "prettier": "@alloc/prettier-config",
   "scripts": {
