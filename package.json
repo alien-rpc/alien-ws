@@ -69,7 +69,7 @@
     "@types/bun": "^1.2.2",
     "@types/deno": "npm:@teidesu/deno-types@*",
     "@types/uws": "^0.13.6",
-    "alien-middleware": "^0.8.0",
+    "alien-middleware": "^0.10.0",
     "prettier": "^3.4.2",
     "rimraf": "^6.0.1",
     "tsc-lint": "^0.1.9",
