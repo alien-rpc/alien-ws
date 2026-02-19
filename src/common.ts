@@ -1,5 +1,5 @@
 import type {
-  MiddlewareChain,
+  AnyMiddlewareChain,
   MiddlewareContext,
   RequestContext,
 } from 'alien-middleware'
@@ -26,7 +26,7 @@ export interface Peer<TContext extends object> extends crossws.Peer {
 /**
  * Hattip context available through the `peer.context` property.
  */
-export type PeerContext<TMiddleware extends MiddlewareChain = any> = Omit<
+export type PeerContext<TMiddleware extends AnyMiddlewareChain = any> = Omit<
   MiddlewareContext<TMiddleware>,
   (typeof ignoredContextKeys)[number]
 >
